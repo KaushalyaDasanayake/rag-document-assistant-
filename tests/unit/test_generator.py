@@ -171,3 +171,30 @@ def test_generator_refuses_when_no_citations_provided():
     assert res.refused is True
     assert res.answer == STANDARD_REFUSAL
     assert res.citations == []
+
+
+def test_generator_with_trace():
+    mock_engine = MagicMock()
+    mock_engine.relevance_threshold = 0.35
+    mock_engine.retrieve.return_value = [
+        _retrieved_chunk("c1", "handbook.md", 2, "Standard core hours are 10:00 AM to 3:00 PM.", score=0.95)
+    ]
+
+    mock_llm = MagicMock()
+    mock_llm.generate.return_value = """{
+        "answer": "Core hours are 10:00 AM to 3:00 PM.",
+        "citations": [{"doc_name": "handbook.md", "page": 2, "quote": "10:00 AM to 3:00 PM"}],
+        "refused": false,
+        "confidence": 0.95
+    }"""
+
+    gen = AnswerGenerator(retrieval_engine=mock_engine, llm_client=mock_llm, model_name="llama-3.1-8b-instant")
+    ans, trace = gen.generate_with_trace("What are core hours?")
+
+    assert ans.refused is False
+    assert trace.query == "What are core hours?"
+    assert trace.retrieval_latency_ms >= 0.0
+    assert trace.generation_latency_ms >= 0.0
+    assert trace.total_tokens > 0
+    assert trace.num_citations == 1
+    assert trace.estimated_cost_usd > 0.0

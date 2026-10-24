@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import re
+import time
 from typing import Any
 
 from ragassistant.config import load_config
@@ -13,6 +14,12 @@ from ragassistant.generation.prompts import (
     build_system_prompt,
     build_user_prompt,
     format_context_passages,
+)
+from ragassistant.observability.tracer import (
+    Tracer,
+    TraceRecord,
+    estimate_tokens,
+    get_tracer,
 )
 from ragassistant.retrieval.engine import RetrievalEngine
 from ragassistant.schemas.document import RetrievedChunk
@@ -88,9 +95,14 @@ class AnswerGenerator:
         self,
         retrieval_engine: RetrievalEngine,
         llm_client: BaseLLMClient,
+        tracer: Tracer | None = None,
+        model_name: str = "llama-3.1-8b-instant",
     ) -> None:
         self.retrieval_engine = retrieval_engine
         self.llm_client = llm_client
+        self.tracer = tracer or get_tracer()
+        model_attr = getattr(llm_client, "model", None)
+        self.model_name = model_attr if isinstance(model_attr, str) else str(model_name)
 
     @classmethod
     def from_config(cls, config: dict[str, Any] | None = None) -> AnswerGenerator:
@@ -103,7 +115,7 @@ class AnswerGenerator:
         model = gen_cfg.get("model", "llama-3.1-8b-instant")
         client = get_llm_client(provider=provider, model=model, fallback_on_missing_key=True)
 
-        return cls(retrieval_engine=engine, llm_client=client)
+        return cls(retrieval_engine=engine, llm_client=client, model_name=model)
 
     def generate(
         self,
@@ -112,91 +124,154 @@ class AnswerGenerator:
         top_k: int | None = None,
     ) -> GroundedAnswer:
         """Generate a grounded answer with verified citations and automatic refusal."""
-        clean_query = query.strip()
-        if not clean_query:
-            return GroundedAnswer(
-                answer=STANDARD_REFUSAL,
-                citations=[],
-                refused=True,
-                confidence=0.0,
-            )
-
-        # 1. Retrieve candidate passages
-        candidates = self.retrieval_engine.retrieve(
-            query=clean_query,
+        answer, _ = self.generate_with_trace(
+            query=query,
             use_reranker=use_reranker,
             top_k=top_k,
         )
+        return answer
 
-        # 2. Refuse if no chunks found
-        if not candidates:
-            return GroundedAnswer(
-                answer=STANDARD_REFUSAL,
-                citations=[],
-                refused=True,
-                confidence=0.0,
+    def generate_with_trace(
+        self,
+        query: str,
+        use_reranker: bool = True,
+        top_k: int | None = None,
+    ) -> tuple[GroundedAnswer, TraceRecord]:
+        """Generate a grounded answer and return execution telemetry."""
+        clean_query = query.strip()
+        with self.tracer.trace(query=clean_query or "empty", model=self.model_name) as ctx:
+            if not clean_query:
+                ans = GroundedAnswer(
+                    answer=STANDARD_REFUSAL,
+                    citations=[],
+                    refused=True,
+                    confidence=0.0,
+                )
+                ctx.record_retrieval(latency_ms=0.0)
+                ctx.record_generation(latency_ms=0.0, input_tokens=0, output_tokens=0, refused=True)
+                return ans, ctx.build_record()
+
+            # 1. Retrieve candidate passages with latency instrumentation
+            t_retrieval_start = time.perf_counter()
+            candidates = self.retrieval_engine.retrieve(
+                query=clean_query,
+                use_reranker=use_reranker,
+                top_k=top_k,
             )
+            retrieval_ms = (time.perf_counter() - t_retrieval_start) * 1000.0
+            ctx.record_retrieval(latency_ms=retrieval_ms)
 
-        # 3. Refuse if top candidate relevance score is below refusal threshold
-        max_score = max(c.score for c in candidates)
-        if max_score < self.retrieval_engine.relevance_threshold:
-            logger.info("Top retrieval score (%.4f) below threshold (%.4f); refusing", max_score, self.retrieval_engine.relevance_threshold)
-            return GroundedAnswer(
-                answer=STANDARD_REFUSAL,
-                citations=[],
-                refused=True,
-                confidence=0.0,
+            # 2. Refuse if no chunks found
+            if not candidates:
+                ans = GroundedAnswer(
+                    answer=STANDARD_REFUSAL,
+                    citations=[],
+                    refused=True,
+                    confidence=0.0,
+                )
+                ctx.record_generation(latency_ms=0.0, input_tokens=0, output_tokens=0, refused=True)
+                return ans, ctx.build_record()
+
+            # 3. Refuse if top candidate relevance score is below refusal threshold
+            max_score = max(c.score for c in candidates)
+            if max_score < self.retrieval_engine.relevance_threshold:
+                logger.info(
+                    "Top retrieval score (%.4f) below threshold (%.4f); refusing",
+                    max_score,
+                    self.retrieval_engine.relevance_threshold,
+                )
+                ans = GroundedAnswer(
+                    answer=STANDARD_REFUSAL,
+                    citations=[],
+                    refused=True,
+                    confidence=0.0,
+                )
+                ctx.record_generation(latency_ms=0.0, input_tokens=0, output_tokens=0, refused=True)
+                return ans, ctx.build_record()
+
+            # 4. Format context and execute LLM with token & latency accounting
+            context_str = format_context_passages(candidates)
+            system_prompt = build_system_prompt()
+            user_prompt = build_user_prompt(clean_query, context_str)
+            in_tokens = estimate_tokens(system_prompt + "\n" + user_prompt)
+
+            t_gen_start = time.perf_counter()
+            try:
+                raw_response = self.llm_client.generate(system_prompt, user_prompt)
+                gen_ms = (time.perf_counter() - t_gen_start) * 1000.0
+                out_tokens = estimate_tokens(raw_response)
+                payload = _extract_json_payload(raw_response)
+                grounded = GroundedAnswer.model_validate(payload)
+            except Exception as err:
+                gen_ms = (time.perf_counter() - t_gen_start) * 1000.0
+                logger.error("Failed to generate or validate grounded answer: %s", err)
+                ans = GroundedAnswer(
+                    answer=STANDARD_REFUSAL,
+                    citations=[],
+                    refused=True,
+                    confidence=0.0,
+                )
+                ctx.record_generation(
+                    latency_ms=gen_ms,
+                    input_tokens=in_tokens,
+                    output_tokens=0,
+                    refused=True,
+                )
+                return ans, ctx.build_record()
+
+            # 5. If model decided to refuse, return clean refusal
+            if grounded.refused:
+                ans = GroundedAnswer(
+                    answer=grounded.answer or STANDARD_REFUSAL,
+                    citations=[],
+                    refused=True,
+                    confidence=0.0,
+                )
+                ctx.record_generation(
+                    latency_ms=gen_ms,
+                    input_tokens=in_tokens,
+                    output_tokens=out_tokens,
+                    refused=True,
+                )
+                return ans, ctx.build_record()
+
+            # 6. Verify verbatim quotes against retrieved source passages
+            valid_citations = verify_citation_quotes(grounded.citations, candidates)
+
+            # Unrefused answers must have at least one genuine verified citation
+            if not valid_citations:
+                logger.warning("Unrefused answer contains no valid citations. Enforcing refusal.")
+                ans = GroundedAnswer(
+                    answer=STANDARD_REFUSAL,
+                    citations=[],
+                    refused=True,
+                    confidence=0.0,
+                )
+                ctx.record_generation(
+                    latency_ms=gen_ms,
+                    input_tokens=in_tokens,
+                    output_tokens=out_tokens,
+                    refused=True,
+                )
+                return ans, ctx.build_record()
+
+            # Adjust confidence if some citations were dropped
+            final_confidence = grounded.confidence
+            if len(valid_citations) < len(grounded.citations):
+                drop_ratio = len(valid_citations) / len(grounded.citations)
+                final_confidence = round(grounded.confidence * drop_ratio, 4)
+
+            ans = GroundedAnswer(
+                answer=grounded.answer,
+                citations=valid_citations,
+                refused=False,
+                confidence=final_confidence,
             )
-
-        # 4. Format context and execute LLM
-        context_str = format_context_passages(candidates)
-        system_prompt = build_system_prompt()
-        user_prompt = build_user_prompt(clean_query, context_str)
-
-        try:
-            raw_response = self.llm_client.generate(system_prompt, user_prompt)
-            payload = _extract_json_payload(raw_response)
-            grounded = GroundedAnswer.model_validate(payload)
-        except Exception as err:
-            logger.error("Failed to generate or validate grounded answer: %s", err)
-            return GroundedAnswer(
-                answer=STANDARD_REFUSAL,
-                citations=[],
-                refused=True,
-                confidence=0.0,
+            ctx.record_generation(
+                latency_ms=gen_ms,
+                input_tokens=in_tokens,
+                output_tokens=out_tokens,
+                refused=False,
+                num_citations=len(valid_citations),
             )
-
-        # 5. If model decided to refuse, return clean refusal
-        if grounded.refused:
-            return GroundedAnswer(
-                answer=grounded.answer or STANDARD_REFUSAL,
-                citations=[],
-                refused=True,
-                confidence=0.0,
-            )
-
-        # 6. Verify verbatim quotes against retrieved source passages
-        valid_citations = verify_citation_quotes(grounded.citations, candidates)
-
-        # Unrefused answers must have at least one genuine verified citation
-        if not valid_citations:
-            logger.warning("Unrefused answer contains no valid citations. Enforcing refusal.")
-            return GroundedAnswer(
-                answer=STANDARD_REFUSAL,
-                citations=[],
-                refused=True,
-                confidence=0.0,
-            )
-
-        # Adjust confidence if some citations were dropped
-        final_confidence = grounded.confidence
-        if len(valid_citations) < len(grounded.citations):
-            drop_ratio = len(valid_citations) / len(grounded.citations)
-            final_confidence = round(grounded.confidence * drop_ratio, 4)
-
-        return GroundedAnswer(
-            answer=grounded.answer,
-            citations=valid_citations,
-            refused=False,
-            confidence=final_confidence,
-        )
+            return ans, ctx.build_record()
