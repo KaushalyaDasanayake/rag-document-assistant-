@@ -39,6 +39,7 @@ def test_embedding_manager_lazy_initialization():
 @patch("ragassistant.retrieval.embeddings.SentenceTransformer")
 def test_embedding_manager_encode_flow(mock_st_class):
     mock_instance = MagicMock()
+    mock_instance.get_embedding_dimension.return_value = 384
     mock_instance.get_sentence_embedding_dimension.return_value = 384
     mock_instance.encode.return_value = np.array([[0.1, 0.2, 0.3], [0.4, 0.5, 0.6]], dtype=np.float32)
     mock_st_class.return_value = mock_instance

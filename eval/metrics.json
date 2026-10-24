@@ -1,0 +1,1618 @@
+{
+  "timestamp": "2026-10-24T16:40:37.680871+00:00",
+  "embedding_model": "BAAI/bge-base-en-v1.5",
+  "reranker_model": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+  "total_eval_samples": 20,
+  "baseline_biencoder": {
+    "recall@3": 1.0,
+    "recall@5": 1.0,
+    "mrr": 0.9417
+  },
+  "reranked_crossencoder": {
+    "recall@3": 1.0,
+    "recall@5": 1.0,
+    "mrr": 0.95
+  },
+  "adversarial_guard": {
+    "refusal_rate": 0.6,
+    "threshold": 0.35
+  },
+  "details": {
+    "baseline": [
+      {
+        "id": "q01",
+        "question": "What are the standard core working hours at Acme Technologies?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.8634
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.6985
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.6961
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.6411
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.6335
+          }
+        ]
+      },
+      {
+        "id": "q02",
+        "question": "How many days of remote work are employees permitted per week?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.7516
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.6684
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.6214
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.5994
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.5912
+          }
+        ]
+      },
+      {
+        "id": "q03",
+        "question": "What is the annual learning stipend amount for Acme employees?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p4_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p4_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.7512
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.7046
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.6806
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.6761
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.6588
+          }
+        ]
+      },
+      {
+        "id": "q04",
+        "question": "How many unused vacation days can be rolled over to the next year at Acme?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p3_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.8304
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.6619
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.6487
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.6201
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.5911
+          }
+        ]
+      },
+      {
+        "id": "q05",
+        "question": "What notice period is required when an individual contributor resigns from Acme?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p5_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.8511
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.7112
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.678
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.637
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.6366
+          }
+        ]
+      },
+      {
+        "id": "q06",
+        "question": "In which primary AWS regions is the CloudScale platform deployed?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.846
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.7531
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.6512
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.5946
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c2",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.5681
+          }
+        ]
+      },
+      {
+        "id": "q07",
+        "question": "What is the token bucket rate limit enforced by the API Gateway?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p3_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.8432
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.6145
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c2",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.6088
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.5851
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.5693
+          }
+        ]
+      },
+      {
+        "id": "q08",
+        "question": "Which AWS region acts as the primary instance for transactional writes in CloudScale?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p4_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.7556
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.7284
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.6714
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.6161
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.6097
+          }
+        ]
+      },
+      {
+        "id": "q09",
+        "question": "What are the RPO and RTO disaster recovery targets for CloudScale?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p5_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.7385
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.7338
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.6693
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.5988
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c2",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.5887
+          }
+        ]
+      },
+      {
+        "id": "q10",
+        "question": "After how many days of inactivity are S3 objects transitioned to Glacier?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p4_c2",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p4_c2",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.7899
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.5902
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.5783
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.5376
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.512
+          }
+        ]
+      },
+      {
+        "id": "q11",
+        "question": "What is DataStream Analytics' promised monthly uptime commitment?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.7915
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.7491
+          },
+          {
+            "chunk_id": "vendor_contract_md_p5_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 5,
+            "score": 0.681
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.6425
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.6365
+          }
+        ]
+      },
+      {
+        "id": "q12",
+        "question": "What service credit applies if DataStream uptime falls between 95.00% and 98.99%?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p3_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.7354
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.7164
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.6847
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.6309
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.6298
+          }
+        ]
+      },
+      {
+        "id": "q13",
+        "question": "What is the fixed monthly platform licensing fee for Apex Logistics?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p4_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.8739
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.7459
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.7434
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.6933
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.6782
+          }
+        ]
+      },
+      {
+        "id": "q14",
+        "question": "Within what timeframe must DataStream notify Apex of a confirmed security breach?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p5_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p5_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 5,
+            "score": 0.8266
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.7273
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.722
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.652
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.6499
+          }
+        ]
+      },
+      {
+        "id": "q15",
+        "question": "What payment terms and interest rates apply to overdue DataStream invoices?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p4_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.7439
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.6762
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.6596
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.6209
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.6115
+          }
+        ]
+      },
+      {
+        "id": "q16",
+        "question": "If an Acme employee resigns and is a manager rather than an individual contributor, how does their notice period differ and what happens to their company laptop?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p5_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.8149
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.704
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.6805
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.6784
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.6509
+          }
+        ]
+      },
+      {
+        "id": "q17",
+        "question": "What total initial financial assistance can a newly hired remote employee at Acme receive between professional learning and home office setup?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p4_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p4_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.7566
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.6882
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.6198
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.6052
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.5909
+          }
+        ]
+      },
+      {
+        "id": "q18",
+        "question": "How are customer data encryption and disaster recovery backups configured across CloudScale storage systems?",
+        "first_hit_rank": 3,
+        "hit_chunk_id": "cloud_architecture_md_p4_c1",
+        "reciprocal_rank": 0.3333,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.6899
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.6856
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.6533
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.6515
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.6142
+          }
+        ]
+      },
+      {
+        "id": "q19",
+        "question": "If DataStream uptime drops below 95% in a billing cycle, what financial and contractual remedies does Apex Logistics have?",
+        "first_hit_rank": 2,
+        "hit_chunk_id": "vendor_contract_md_p3_c1",
+        "reciprocal_rank": 0.5,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.7784
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.775
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.7552
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.7494
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.744
+          }
+        ]
+      },
+      {
+        "id": "q20",
+        "question": "Compare the security notification window in the vendor contract with the rollover expiration date for unused vacation in the employee handbook.",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p3_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.6256
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.6091
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.5755
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.5547
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.5524
+          }
+        ]
+      }
+    ],
+    "reranked": [
+      {
+        "id": "q01",
+        "question": "What are the standard core working hours at Acme Technologies?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.9999
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.2457
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.0837
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.075
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.005
+          }
+        ]
+      },
+      {
+        "id": "q02",
+        "question": "How many days of remote work are employees permitted per week?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.9998
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.2528
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.0295
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0038
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.0001
+          }
+        ]
+      },
+      {
+        "id": "q03",
+        "question": "What is the annual learning stipend amount for Acme employees?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p4_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p4_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.9897
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.6651
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0119
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.0068
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.0053
+          }
+        ]
+      },
+      {
+        "id": "q04",
+        "question": "How many unused vacation days can be rolled over to the next year at Acme?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p3_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.9999
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.1689
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.0179
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0095
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.0011
+          }
+        ]
+      },
+      {
+        "id": "q05",
+        "question": "What notice period is required when an individual contributor resigns from Acme?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p5_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.9999
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.1404
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.0095
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0044
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.0013
+          }
+        ]
+      },
+      {
+        "id": "q06",
+        "question": "In which primary AWS regions is the CloudScale platform deployed?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.9999
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.0832
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0007
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.0001
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "id": "q07",
+        "question": "What is the token bucket rate limit enforced by the API Gateway?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p3_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.9998
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c2",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "id": "q08",
+        "question": "Which AWS region acts as the primary instance for transactional writes in CloudScale?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p4_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.9897
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.8733
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.001
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.0001
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "id": "q09",
+        "question": "What are the RPO and RTO disaster recovery targets for CloudScale?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p5_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.9843
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.0155
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.0028
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "id": "q10",
+        "question": "After how many days of inactivity are S3 objects transitioned to Glacier?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "cloud_architecture_md_p4_c2",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p4_c2",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.9999
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.0
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "id": "q11",
+        "question": "What is DataStream Analytics' promised monthly uptime commitment?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p2_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.9431
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.0649
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0518
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.0329
+          },
+          {
+            "chunk_id": "vendor_contract_md_p5_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 5,
+            "score": 0.0059
+          }
+        ]
+      },
+      {
+        "id": "q12",
+        "question": "What service credit applies if DataStream uptime falls between 95.00% and 98.99%?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p3_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.9986
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.9888
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.935
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0371
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.0312
+          }
+        ]
+      },
+      {
+        "id": "q13",
+        "question": "What is the fixed monthly platform licensing fee for Apex Logistics?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p4_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.9999
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.8453
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.8247
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.0877
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0231
+          }
+        ]
+      },
+      {
+        "id": "q14",
+        "question": "Within what timeframe must DataStream notify Apex of a confirmed security breach?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p5_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p5_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 5,
+            "score": 0.9996
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.3418
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.0846
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.0218
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0041
+          }
+        ]
+      },
+      {
+        "id": "q15",
+        "question": "What payment terms and interest rates apply to overdue DataStream invoices?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "vendor_contract_md_p4_c0",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.985
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.0037
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0003
+          },
+          {
+            "chunk_id": "vendor_contract_md_p5_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 5,
+            "score": 0.0002
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.0
+          }
+        ]
+      },
+      {
+        "id": "q16",
+        "question": "If an Acme employee resigns and is a manager rather than an individual contributor, how does their notice period differ and what happens to their company laptop?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p5_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.9815
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.1405
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.0072
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.0043
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0024
+          }
+        ]
+      },
+      {
+        "id": "q17",
+        "question": "What total initial financial assistance can a newly hired remote employee at Acme receive between professional learning and home office setup?",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p4_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p4_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.9742
+          },
+          {
+            "chunk_id": "employee_handbook_md_p2_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 2,
+            "score": 0.0122
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0023
+          },
+          {
+            "chunk_id": "employee_handbook_md_p1_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 1,
+            "score": 0.0016
+          },
+          {
+            "chunk_id": "employee_handbook_md_p4_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 4,
+            "score": 0.0008
+          }
+        ]
+      },
+      {
+        "id": "q18",
+        "question": "How are customer data encryption and disaster recovery backups configured across CloudScale storage systems?",
+        "first_hit_rank": 2,
+        "hit_chunk_id": "cloud_architecture_md_p5_c0",
+        "reciprocal_rank": 0.5,
+        "top_retrieved": [
+          {
+            "chunk_id": "cloud_architecture_md_p2_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 2,
+            "score": 0.1241
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p5_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 5,
+            "score": 0.015
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p1_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 1,
+            "score": 0.0043
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p4_c1",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 4,
+            "score": 0.0001
+          },
+          {
+            "chunk_id": "cloud_architecture_md_p3_c0",
+            "doc_name": "cloud_architecture.md",
+            "page_number": 3,
+            "score": 0.0001
+          }
+        ]
+      },
+      {
+        "id": "q19",
+        "question": "If DataStream uptime drops below 95% in a billing cycle, what financial and contractual remedies does Apex Logistics have?",
+        "first_hit_rank": 2,
+        "hit_chunk_id": "vendor_contract_md_p3_c1",
+        "reciprocal_rank": 0.5,
+        "top_retrieved": [
+          {
+            "chunk_id": "vendor_contract_md_p3_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.9853
+          },
+          {
+            "chunk_id": "vendor_contract_md_p3_c1",
+            "doc_name": "vendor_contract.md",
+            "page_number": 3,
+            "score": 0.9537
+          },
+          {
+            "chunk_id": "vendor_contract_md_p2_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 2,
+            "score": 0.9352
+          },
+          {
+            "chunk_id": "vendor_contract_md_p4_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 4,
+            "score": 0.6047
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0517
+          }
+        ]
+      },
+      {
+        "id": "q20",
+        "question": "Compare the security notification window in the vendor contract with the rollover expiration date for unused vacation in the employee handbook.",
+        "first_hit_rank": 1,
+        "hit_chunk_id": "employee_handbook_md_p3_c1",
+        "reciprocal_rank": 1.0,
+        "top_retrieved": [
+          {
+            "chunk_id": "employee_handbook_md_p3_c1",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.2098
+          },
+          {
+            "chunk_id": "employee_handbook_md_p5_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 5,
+            "score": 0.0003
+          },
+          {
+            "chunk_id": "vendor_contract_md_p1_c0",
+            "doc_name": "vendor_contract.md",
+            "page_number": 1,
+            "score": 0.0001
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c0",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.0001
+          },
+          {
+            "chunk_id": "employee_handbook_md_p3_c2",
+            "doc_name": "employee_handbook.md",
+            "page_number": 3,
+            "score": 0.0
+          }
+        ]
+      }
+    ],
+    "adversarial": [
+      {
+        "id": "q21",
+        "question": "What is the reimbursement policy for employee gym and fitness memberships at Acme?",
+        "top_score": 0.0712,
+        "would_refuse": true
+      },
+      {
+        "id": "q22",
+        "question": "How many Redis cluster shards are deployed for session caching in CloudScale?",
+        "top_score": 0.0163,
+        "would_refuse": true
+      },
+      {
+        "id": "q23",
+        "question": "What discount does Apex Logistics receive if they pay their invoices within 10 days instead of Net 30?",
+        "top_score": 0.9923,
+        "would_refuse": false
+      },
+      {
+        "id": "q24",
+        "question": "What are the names of Acme Technologies' Board of Directors?",
+        "top_score": 0.5959,
+        "would_refuse": false
+      },
+      {
+        "id": "q25",
+        "question": "What is the pricing tier for Snowflake data warehousing storage in CloudScale?",
+        "top_score": 0.0005,
+        "would_refuse": true
+      }
+    ]
+  }
+}
