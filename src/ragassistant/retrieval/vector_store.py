@@ -89,7 +89,7 @@ class VectorStore:
         where: dict[str, Any] | None = None,
     ) -> list[RetrievedChunk]:
         """Perform semantic similarity search over indexed chunks."""
-        if self.count() == 0:
+        if top_k <= 0 or self.count() == 0:
             return []
 
         if query_embedding is None:
@@ -116,14 +116,15 @@ class VectorStore:
         for chunk_id, doc_text, meta, distance in zip(ids_list, docs_list, metas_list, distances_list, strict=False):
             # ChromaDB cosine distance: distance = 1 - cosine_sim
             score = max(0.0, min(1.0, 1.0 - float(distance)))
+            safe_meta = meta or {}
 
             chunk = DocumentChunk(
                 chunk_id=chunk_id,
-                doc_name=str(meta.get("doc_name", "")),
-                page_number=int(meta.get("page_number", 1)),
-                chunk_index=int(meta.get("chunk_index", 0)),
+                doc_name=str(safe_meta.get("doc_name", "")),
+                page_number=int(safe_meta.get("page_number", 1)),
+                chunk_index=int(safe_meta.get("chunk_index", 0)),
                 text=str(doc_text),
-                token_count=int(meta.get("token_count", 0)),
+                token_count=int(safe_meta.get("token_count", 0)),
             )
             retrieved.append(RetrievedChunk(chunk=chunk, score=score))
 

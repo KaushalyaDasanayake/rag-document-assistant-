@@ -15,7 +15,7 @@ def _split_text_with_separators(
     chunk_overlap: int,
     separators: list[str] | None = None,
 ) -> list[str]:
-    """Recursively split text using hierarchy of separators until slices fit chunk_size."""
+    """Recursively split text using hierarchy of separators into verbatim chunks."""
     if len(text) <= chunk_size:
         return [text] if text.strip() else []
 
@@ -27,40 +27,52 @@ def _split_text_with_separators(
             break
 
     if not chosen_sep:
-        # Fallback to hard character slicing if no separator exists
-        return [text[i : i + chunk_size] for i in range(0, len(text), chunk_size - chunk_overlap)]
+        step = max(1, chunk_size - chunk_overlap)
+        return [text[i : i + chunk_size] for i in range(0, len(text), step)]
 
     splits = text.split(chosen_sep)
     chunks: list[str] = []
-    current_piece = ""
+    current_pieces: list[str] = []
+    current_length = 0
 
     for piece in splits:
-        candidate = f"{current_piece}{chosen_sep}{piece}" if current_piece else piece
-        if len(candidate) <= chunk_size:
-            current_piece = candidate
+        piece_len = len(piece) + (len(chosen_sep) if current_pieces else 0)
+        if current_length + piece_len <= chunk_size:
+            current_pieces.append(piece)
+            current_length += piece_len
         else:
-            if current_piece.strip():
-                chunks.append(current_piece.strip())
-            # If the single piece is larger than chunk_size, recurse on remaining separators
+            if current_pieces:
+                combined = chosen_sep.join(current_pieces).strip()
+                if combined:
+                    chunks.append(combined)
+
+                overlap_pieces: list[str] = []
+                overlap_len = 0
+                for p in reversed(current_pieces):
+                    add_len = len(p) + (len(chosen_sep) if overlap_pieces else 0)
+                    if overlap_len + add_len <= chunk_overlap:
+                        overlap_pieces.insert(0, p)
+                        overlap_len += add_len
+                    else:
+                        break
+                current_pieces = overlap_pieces
+                current_length = overlap_len
+
             if len(piece) > chunk_size:
                 remaining_seps = [s for s in seps if s != chosen_sep]
                 sub_chunks = _split_text_with_separators(piece, chunk_size, chunk_overlap, remaining_seps)
                 chunks.extend(sub_chunks)
-                current_piece = ""
+                current_pieces = []
+                current_length = 0
             else:
-                current_piece = piece
+                add_len = len(piece) + (len(chosen_sep) if current_pieces else 0)
+                current_pieces.append(piece)
+                current_length += add_len
 
-    if current_piece.strip():
-        chunks.append(current_piece.strip())
-
-    # Build overlapping windows between consecutive chunks
-    if chunk_overlap > 0 and len(chunks) > 1:
-        merged_with_overlap: list[str] = [chunks[0]]
-        for i in range(1, len(chunks)):
-            prev = chunks[i - 1]
-            overlap_prefix = prev[-chunk_overlap:] if len(prev) >= chunk_overlap else prev
-            merged_with_overlap.append(f"{overlap_prefix} ... {chunks[i]}")
-        return merged_with_overlap
+    if current_pieces:
+        combined = chosen_sep.join(current_pieces).strip()
+        if combined:
+            chunks.append(combined)
 
     return chunks
 

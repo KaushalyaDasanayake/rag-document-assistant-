@@ -40,6 +40,13 @@ def test_vector_store_empty_query():
     assert results == []
 
 
+def test_vector_store_non_positive_top_k(sample_chunks: list[DocumentChunk]):
+    store = VectorStore(collection_name="topk_coll")
+    store.add_chunks(sample_chunks, embeddings=[[0.1, 0.2], [0.3, 0.4]])
+    assert store.query(query_embedding=[0.1, 0.2], top_k=0) == []
+    assert store.query(query_embedding=[0.1, 0.2], top_k=-1) == []
+
+
 def test_vector_store_add_and_query_precomputed(sample_chunks: list[DocumentChunk]):
     store = VectorStore(collection_name="precomputed_coll")
     fake_embeddings = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0]]

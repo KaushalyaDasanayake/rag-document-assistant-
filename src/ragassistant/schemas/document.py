@@ -37,8 +37,8 @@ class IngestionStats(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     doc_name: str
-    total_pages: int = Field(..., ge=1)
-    total_chunks: int = Field(..., ge=1)
+    total_pages: int = Field(..., ge=0)
+    total_chunks: int = Field(..., ge=0)
     total_characters: int = Field(..., ge=0)
 
 
