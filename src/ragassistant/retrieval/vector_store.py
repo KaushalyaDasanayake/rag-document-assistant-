@@ -130,6 +130,37 @@ class VectorStore:
 
         return retrieved
 
+    def delete_document(self, doc_name: str) -> int:
+        """Delete all indexed chunks belonging to a document under corporate retention policy."""
+        clean_name = doc_name.strip()
+        if not clean_name:
+            return 0
+
+        existing = self.collection.get(where={"doc_name": clean_name})
+        ids_to_delete = existing.get("ids", [])
+        if not ids_to_delete:
+            return 0
+
+        self.collection.delete(where={"doc_name": clean_name})
+        logger.info("Deleted %d chunks for document '%s'", len(ids_to_delete), clean_name)
+        return len(ids_to_delete)
+
+    def list_documents(self) -> list[str]:
+        """List distinct document names present in the vector store."""
+        if self.count() == 0:
+            return []
+        records = self.collection.get(include=["metadatas"])
+        metas = records.get("metadatas", [])
+        names = {str(m.get("doc_name")) for m in metas if m and "doc_name" in m}
+        return sorted(names)
+
+    def cleanup_retention(self) -> int:
+        """Purge all index entries in compliance with corporate data retention wipe policies."""
+        total_before = self.count()
+        self.clear()
+        logger.info("Executed full index retention cleanup. Purged %d chunks.", total_before)
+        return total_before
+
     def clear(self) -> None:
         """Clear all indexed documents by recreating the collection."""
         self.client.delete_collection(self.collection_name)

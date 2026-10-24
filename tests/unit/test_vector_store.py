@@ -96,3 +96,23 @@ def test_vector_store_persistence(tmp_path: Path, sample_chunks: list[DocumentCh
     # Reopen same persistent directory
     store2 = VectorStore(persist_directory=db_dir, collection_name="persistent_coll")
     assert store2.count() == 2
+
+
+def test_vector_store_delete_document_and_retention(sample_chunks: list[DocumentChunk]):
+    store = VectorStore(collection_name="retention_coll")
+    store.add_chunks(sample_chunks, embeddings=[[0.1, 0.2], [0.3, 0.4]])
+    assert store.count() == 2
+    assert store.list_documents() == ["handbook.md"]
+
+    deleted = store.delete_document("handbook.md")
+    assert deleted == 2
+    assert store.count() == 0
+    assert store.list_documents() == []
+
+    # Deleting non-existent doc returns 0
+    assert store.delete_document("nonexistent.pdf") == 0
+
+    # Cleanup retention
+    store.add_chunks(sample_chunks, embeddings=[[0.1, 0.2], [0.3, 0.4]])
+    assert store.cleanup_retention() == 2
+    assert store.count() == 0
