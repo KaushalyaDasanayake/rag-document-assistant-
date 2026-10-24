@@ -12,7 +12,7 @@ def is_evidence_in_chunk(evidence_list: list[str], chunk_text: str) -> bool:
     normalized_chunk = " ".join(chunk_text.lower().split())
     for ev in evidence_list:
         normalized_ev = " ".join(ev.lower().split())
-        if normalized_ev in normalized_chunk:
+        if normalized_ev and normalized_ev in normalized_chunk:
             return True
     return False
 

@@ -65,12 +65,13 @@ class RetrievalEngine:
         if not query.strip():
             return []
 
-        candidates = self.vector_store.query(query=query, top_k=self.top_k_candidates)
-        if not candidates:
-            return []
-
         target_k = top_k if top_k is not None else self.top_k_reranked
         if target_k <= 0:
+            return []
+
+        candidate_k = max(self.top_k_candidates, target_k)
+        candidates = self.vector_store.query(query=query, top_k=candidate_k)
+        if not candidates:
             return []
 
         if use_reranker and self.reranker is not None:

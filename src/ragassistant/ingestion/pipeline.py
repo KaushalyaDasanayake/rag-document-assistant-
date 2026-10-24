@@ -57,6 +57,8 @@ def ingest_directory(
     dir_path = Path(directory_path)
     if not dir_path.exists():
         raise FileNotFoundError(f"Directory not found: {dir_path}")
+    if not dir_path.is_dir():
+        raise NotADirectoryError(f"Path is not a directory: {dir_path}")
 
     supported_suffixes = {".pdf", ".md", ".txt"}
     files = sorted([f for f in dir_path.iterdir() if f.is_file() and f.suffix.lower() in supported_suffixes])

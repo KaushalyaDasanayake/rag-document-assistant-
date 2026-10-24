@@ -53,8 +53,9 @@ class CrossEncoderReranker:
         for candidate, raw_score in zip(candidates, raw_scores, strict=False):
             val = float(raw_score)
             if self.apply_sigmoid:
-                # Sigmoid to normalize logits to [0.0, 1.0]
-                score = float(1.0 / (1.0 + np.exp(-val)))
+                # Sigmoid to normalize logits to [0.0, 1.0] with clipping to prevent overflow
+                clipped_val = float(np.clip(val, -50.0, 50.0))
+                score = float(1.0 / (1.0 + np.exp(-clipped_val)))
             else:
                 score = val
 
