@@ -2,18 +2,25 @@
 
 from __future__ import annotations
 
+import html
 import os
+import sys
 import tempfile
 from pathlib import Path
 
 import streamlit as st
 
-from ragassistant.config import load_config
-from ragassistant.generation.generator import AnswerGenerator
-from ragassistant.generation.llm import get_llm_client
-from ragassistant.ingestion.pipeline import ingest_directory, ingest_file
-from ragassistant.observability.tracer import get_tracer
-from ragassistant.retrieval.engine import RetrievalEngine
+# Ensure src directory is in sys.path for Streamlit Cloud deployments
+src_path = Path(__file__).resolve().parent / "src"
+if src_path.exists() and str(src_path) not in sys.path:
+    sys.path.insert(0, str(src_path))
+
+from ragassistant.config import load_config  # noqa: E402
+from ragassistant.generation.generator import AnswerGenerator  # noqa: E402
+from ragassistant.generation.llm import get_llm_client  # noqa: E402
+from ragassistant.ingestion.pipeline import ingest_directory, ingest_file  # noqa: E402
+from ragassistant.observability.tracer import get_tracer  # noqa: E402
+from ragassistant.retrieval.engine import RetrievalEngine  # noqa: E402
 
 # Page Configuration
 st.set_page_config(
@@ -80,12 +87,8 @@ st.markdown(
 
 
 @st.cache_resource(show_spinner="Initializing retrieval and embedding engine...")
-def load_app_resources(
-    provider: str = "groq",
-    model: str = "llama-3.1-8b-instant",
-    api_key: str | None = None,
-) -> tuple[AnswerGenerator, RetrievalEngine]:
-    """Initialize and cache retrieval engine and answer generator."""
+def get_retrieval_engine() -> RetrievalEngine:
+    """Initialize and cache the retrieval engine and vector store once."""
     cfg = load_config()
     retrieval_engine = RetrievalEngine.from_config(cfg)
 
@@ -95,6 +98,16 @@ def load_app_resources(
         if docs_dir.exists():
             ingest_directory(docs_dir, retrieval_engine.vector_store)
 
+    return retrieval_engine
+
+
+def get_answer_generator(
+    provider: str = "groq",
+    model: str = "llama-3.1-8b-instant",
+    api_key: str | None = None,
+) -> tuple[AnswerGenerator, RetrievalEngine]:
+    """Build answer generator reusing cached retrieval engine."""
+    retrieval_engine = get_retrieval_engine()
     llm_client = get_llm_client(
         provider=provider,
         model=model,
@@ -135,7 +148,7 @@ with st.sidebar:
             help="Leave blank to use environment keys or deterministic offline extraction.",
         )
 
-    generator, retrieval_engine = load_app_resources(
+    generator, retrieval_engine = get_answer_generator(
         provider=selected_provider,
         model=selected_model,
         api_key=user_api_key.strip() if user_api_key else None,
@@ -157,25 +170,12 @@ with st.sidebar:
         if st.button("🚀 Ingest Uploaded Documents", use_container_width=True):
             with st.spinner("Ingesting and embedding documents..."):
                 total_chunks_added = 0
-                for file_obj in uploaded_files:
-                    with tempfile.NamedTemporaryFile(
-                        delete=False,
-                        suffix=Path(file_obj.name).suffix,
-                    ) as tmp:
-                        tmp.write(file_obj.getvalue())
-                        tmp_path = Path(tmp.name)
-
-                    try:
+                with tempfile.TemporaryDirectory() as tmp_dir:
+                    for file_obj in uploaded_files:
+                        tmp_path = Path(tmp_dir) / file_obj.name
+                        tmp_path.write_bytes(file_obj.getvalue())
                         stats = ingest_file(tmp_path, vector_store)
-                        # Patch doc_name to original uploaded name
-                        vector_store.collection.update(
-                            where={"doc_name": tmp_path.name},
-                            metadatas=[{"doc_name": file_obj.name}] * stats.total_chunks,
-                        )
                         total_chunks_added += stats.total_chunks
-                    finally:
-                        if tmp_path.exists():
-                            tmp_path.unlink()
 
                 st.success(f"Successfully ingested {len(uploaded_files)} files ({total_chunks_added} chunks).")
                 st.rerun()
@@ -277,11 +277,13 @@ for msg in st.session_state.messages:
             if citations:
                 with st.expander(f"🔍 Source Citations ({len(citations)})", expanded=False):
                     for idx, c in enumerate(citations, 1):
+                        safe_doc = html.escape(str(c["doc_name"]))
+                        safe_quote = html.escape(str(c["quote"]))
                         st.markdown(
                             f"""
                             <div class="citation-box">
-                                <b>Citation #{idx}</b>: <code>{c['doc_name']}</code> (Page {c['page']})<br>
-                                <span class="quote-text">"{c['quote']}"</span>
+                                <b>Citation #{idx}</b>: <code>{safe_doc}</code> (Page {c['page']})<br>
+                                <span class="quote-text">"{safe_quote}"</span>
                             </div>
                             """,
                             unsafe_allow_html=True,
@@ -338,11 +340,13 @@ if active_query:
         if citations_data:
             with st.expander(f"🔍 Source Citations ({len(citations_data)})", expanded=True):
                 for idx, c in enumerate(citations_data, 1):
+                    safe_doc = html.escape(str(c["doc_name"]))
+                    safe_quote = html.escape(str(c["quote"]))
                     st.markdown(
                         f"""
                         <div class="citation-box">
-                            <b>Citation #{idx}</b>: <code>{c['doc_name']}</code> (Page {c['page']})<br>
-                            <span class="quote-text">"{c['quote']}"</span>
+                            <b>Citation #{idx}</b>: <code>{safe_doc}</code> (Page {c['page']})<br>
+                            <span class="quote-text">"{safe_quote}"</span>
                         </div>
                         """,
                         unsafe_allow_html=True,
