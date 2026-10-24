@@ -1,0 +1,23 @@
+# Python virtual environments & bytecode
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+build/
+dist/
+
+# Testing & Linting caches
+.pytest_cache/
+.ruff_cache/
+.coverage
+
+# Vector database & temporary runtime storage
+data/chroma_db/
+data/runtime/
+eval/results/
+
+# Environment secrets & OS artifacts
+.env
+.DS_Store
+*.swp
