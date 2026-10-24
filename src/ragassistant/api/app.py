@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 
 from ragassistant.generation.generator import AnswerGenerator
@@ -143,6 +143,9 @@ def get_metrics(tracer: Tracer = Depends(get_tracer)) -> dict[str, Any]:
 
 
 @app.get("/v1/traces", response_model=list[TraceRecord], tags=["Observability & Cost Accounting"])
-def get_traces(limit: int = 50, tracer: Tracer = Depends(get_tracer)) -> list[TraceRecord]:
+def get_traces(
+    limit: int = Query(default=50, ge=1, le=1000, description="Max traces to return"),
+    tracer: Tracer = Depends(get_tracer),
+) -> list[TraceRecord]:
     """Retrieve recent query trace records."""
     return tracer.get_traces(limit=limit)

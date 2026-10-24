@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import math
+import threading
 import time
 import uuid
 from collections import deque
@@ -145,6 +146,7 @@ class Tracer:
 
     def __init__(self, max_records: int = 1000) -> None:
         self.records: deque[TraceRecord] = deque(maxlen=max_records)
+        self._lock = threading.Lock()
 
     @contextmanager
     def trace(self, query: str, model: str = "llama-3.1-8b-instant") -> Generator[TraceContext, None, None]:
@@ -154,19 +156,25 @@ class Tracer:
             yield ctx
         finally:
             record = ctx.build_record()
-            self.records.append(record)
+            with self._lock:
+                self.records.append(record)
 
     def add_record(self, record: TraceRecord) -> None:
         """Manually append a pre-built TraceRecord."""
-        self.records.append(record)
+        with self._lock:
+            self.records.append(record)
 
     def get_traces(self, limit: int = 50) -> list[TraceRecord]:
         """Return the most recent traces in reverse chronological order."""
-        return list(reversed(self.records))[:limit]
+        with self._lock:
+            return list(reversed(self.records))[: max(1, limit)]
 
     def get_metrics(self) -> dict[str, Any]:
         """Calculate system-wide aggregate telemetry, token accounting, and cost per 1k queries."""
-        count = len(self.records)
+        with self._lock:
+            snapshot = list(self.records)
+
+        count = len(snapshot)
         if count == 0:
             return {
                 "total_queries": 0,
@@ -183,10 +191,10 @@ class Tracer:
                 "cost_per_1k_queries_usd": 0.0,
             }
 
-        refusals = sum(1 for r in self.records if r.refused)
-        retrieval_lats = [r.retrieval_latency_ms for r in self.records]
-        generation_lats = [r.generation_latency_ms for r in self.records]
-        total_lats = sorted(r.total_latency_ms for r in self.records)
+        refusals = sum(1 for r in snapshot if r.refused)
+        retrieval_lats = [r.retrieval_latency_ms for r in snapshot]
+        generation_lats = [r.generation_latency_ms for r in snapshot]
+        total_lats = sorted(r.total_latency_ms for r in snapshot)
 
         p95_idx = max(0, math.ceil(0.95 * count) - 1)
         p95_lat = total_lats[p95_idx]
