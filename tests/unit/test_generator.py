@@ -44,8 +44,13 @@ def test_verify_citation_quotes_valid_and_invalid():
         page=5,
         quote="10:00 AM to 3:00 PM",  # Page mismatch
     )
+    whitespace_cit = Citation(
+        doc_name="handbook.md",
+        page=2,
+        quote="   ",
+    )
 
-    verified = verify_citation_quotes([valid_cit, hallucinated_cit, wrong_page_cit], passages)
+    verified = verify_citation_quotes([valid_cit, hallucinated_cit, wrong_page_cit, whitespace_cit], passages)
     assert len(verified) == 1
     assert verified[0].quote == "10:00 AM to 3:00 PM"
 
@@ -142,3 +147,27 @@ def test_generator_with_deterministic_fallback():
     assert res.refused is False
     assert len(res.citations) == 1
     assert res.citations[0].doc_name == "handbook.md"
+
+
+def test_generator_refuses_when_no_citations_provided():
+    mock_engine = MagicMock()
+    mock_engine.relevance_threshold = 0.35
+    mock_engine.retrieve.return_value = [
+        _retrieved_chunk("c1", "handbook.md", 2, "Standard core hours are 10:00 AM to 3:00 PM.", score=0.95)
+    ]
+
+    mock_llm = MagicMock()
+    # Model returned answer with no citations at all
+    mock_llm.generate.return_value = """{
+        "answer": "Core hours are 10am to 3pm.",
+        "citations": [],
+        "refused": false,
+        "confidence": 0.95
+    }"""
+
+    gen = AnswerGenerator(retrieval_engine=mock_engine, llm_client=mock_llm)
+    res = gen.generate("What are core hours?")
+
+    assert res.refused is True
+    assert res.answer == STANDARD_REFUSAL
+    assert res.citations == []

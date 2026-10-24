@@ -56,6 +56,8 @@ def verify_citation_quotes(
 
     for cit in citations:
         cit_quote_norm = " ".join(cit.quote.lower().split())
+        if not cit_quote_norm:
+            continue
         found_in_source = False
 
         for item in passages:
@@ -176,9 +178,9 @@ class AnswerGenerator:
         # 6. Verify verbatim quotes against retrieved source passages
         valid_citations = verify_citation_quotes(grounded.citations, candidates)
 
-        # If answer claimed facts but none of its citations were genuine, refuse
-        if grounded.citations and not valid_citations:
-            logger.warning("All citations were hallucinated or unverifiable. Enforcing refusal.")
+        # Unrefused answers must have at least one genuine verified citation
+        if not valid_citations:
+            logger.warning("Unrefused answer contains no valid citations. Enforcing refusal.")
             return GroundedAnswer(
                 answer=STANDARD_REFUSAL,
                 citations=[],
