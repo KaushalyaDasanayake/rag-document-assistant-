@@ -40,3 +40,12 @@ class IngestionStats(BaseModel):
     total_pages: int = Field(..., ge=1)
     total_chunks: int = Field(..., ge=1)
     total_characters: int = Field(..., ge=0)
+
+
+class RetrievedChunk(BaseModel):
+    """A retrieved chunk paired with its relevance score."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    chunk: DocumentChunk
+    score: float = Field(..., description="Cosine similarity score (0.0 to 1.0)")

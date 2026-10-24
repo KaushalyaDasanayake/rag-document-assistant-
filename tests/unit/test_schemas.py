@@ -5,7 +5,12 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from ragassistant.schemas.document import DocumentChunk, DocumentPage, IngestionStats
+from ragassistant.schemas.document import (
+    DocumentChunk,
+    DocumentPage,
+    IngestionStats,
+    RetrievedChunk,
+)
 
 
 def test_document_page_valid():
@@ -51,3 +56,17 @@ def test_ingestion_stats():
         total_characters=8400,
     )
     assert stats.total_chunks == 22
+
+
+def test_retrieved_chunk_valid():
+    chunk = DocumentChunk(
+        chunk_id="doc_p1_c0",
+        doc_name="doc.txt",
+        page_number=1,
+        chunk_index=0,
+        text="Retrieved content",
+        token_count=2,
+    )
+    retrieved = RetrievedChunk(chunk=chunk, score=0.88)
+    assert retrieved.chunk.chunk_id == "doc_p1_c0"
+    assert retrieved.score == 0.88
